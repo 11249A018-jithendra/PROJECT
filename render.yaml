@@ -1,0 +1,31 @@
+# Render Blueprint for the backend API (Dashboard → New → Blueprint → pick this repo).
+# Secret values marked sync: false are asked for when the service is created.
+services:
+  - type: web
+    name: hostelms-api
+    runtime: node
+    rootDir: backend
+    plan: free            # change to "starter" to keep it always on (background jobs keep running)
+    region: singapore     # closest Render region to India
+    buildCommand: npm ci --omit=dev
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DEVELOPER_PORTAL_ENABLED
+        value: "false"
+      - key: TRUST_PROXY
+        value: "1"
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_KEY
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: ALLOWED_ORIGINS
+        sync: false
+      # Optional: Claude API key for the Hostel Assistant chatbot. Leave empty to
+      # use the built-in FAQ answers only.
+      - key: ANTHROPIC_API_KEY
+        sync: false

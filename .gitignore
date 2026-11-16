@@ -1,0 +1,18 @@
+# Secrets — never commit (backend/.env holds the Supabase service key + JWT secret)
+.env
+.env.*
+!.env.example
+
+# Dependencies / builds
+node_modules/
+dist/
+dist-ssr/
+
+# User uploads (student photos etc.)
+backend/uploads/*
+!backend/uploads/.gitkeep
+
+# Local tooling
+supabase/.temp/
+*.log
+.DS_Store
