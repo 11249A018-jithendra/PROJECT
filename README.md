@@ -122,17 +122,16 @@ The project uses modern web technologies for frontend development, backend servi
 
 ## 📁 Project Structure
 
-text
 HOSTEL-MANAGEMENT-SYSTEM/
 │
 ├── .claude/
 │
 ├── backend/
-│   ├── API and server code
-│   ├── Routes
-│   ├── Controllers
-│   ├── Models
-│   └── Tests
+│   ├── API/
+│   ├── Routes/
+│   ├── Controllers/
+│   ├── Models/
+│   └── Tests/
 │
 ├── frontend/
 │   ├── public/
@@ -146,17 +145,18 @@ HOSTEL-MANAGEMENT-SYSTEM/
 │       │   ├── student/
 │       │   ├── warden/
 │       │   └── security/
+│       │
 │       └── utils/
 │
 ├── docs/
-│   └── ui-redesign/
+│
+├── ui-redesign/
 │
 ├── supabase/
 │
 ├── .gitignore
 ├── README.md
 └── render.yaml
-```
 
 *Note: This is a high-level representation of the project structure. Actual folders and files may change during development.*
 
