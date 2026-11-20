@@ -82,7 +82,19 @@ for (const [role, portal, initialRole, expected] of [
 ]) {
   test(`${role}: sign-in form has accessible credential fields and the shared illustration`, async () => {
     const html = await render('/src/pages/Login.jsx', { role, portal, route: `/login?as=${role}`, props: { initialRole }, user: null });
-    assert.match(html, /vs-auth-art/);
+    if (role === 'student') {
+      assert.match(html, /data-auth-theme="after-class"/);
+      assert.match(html, /data-student-scene="true"/);
+      assert.match(html, /aria-label="Pause student scene"/);
+      assert.doesNotMatch(html, /class="vs-auth campus-auth"/);
+    } else {
+      assert.match(html, /vs-auth-art/);
+      assert.match(html, /data-campus-scene="true"/);
+      assert.match(html, /aria-label="Pause campus animation"/);
+      assert.doesNotMatch(html, /data-auth-theme="after-class"/);
+    }
+    assert.doesNotMatch(html, /aria-label="Choose your sign-in portal"/);
+    assert.match(html, /data-motion="playing"/);
     assert.match(html, /id="login-identifier"/);
     assert.match(html, /autoComplete="username"/);
     assert.match(html, /autoComplete="current-password"/);

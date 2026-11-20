@@ -6,6 +6,7 @@ import { currentPortal } from '../portal';
 import { homeFor } from '../utils/roleRoutes';
 import api from '../api/axios';
 import AuthShell from '../components/AuthShell';
+import StudentAuthShell from '../components/StudentAuthShell';
 
 const ROLE_LABELS = { student: 'Student', security: 'Security', admin: 'Admin', warden: 'Warden', staff: 'Staff' };
 const Login = ({ initialRole }) => {
@@ -26,6 +27,7 @@ const Login = ({ initialRole }) => {
   const [loading, setLoading] = useState(false);
   const [forgot, setForgot] = useState({ open: false, sending: false, message: '', error: '' });
   const label = ROLE_LABELS[targetRole === 'staff' ? staffRole : targetRole] || 'Student';
+  const Shell = targetRole === 'student' ? StudentAuthShell : AuthShell;
   const pickStaffRole = (role) => {
     setStaffRole(role);
     setError('');
@@ -52,7 +54,7 @@ const Login = ({ initialRole }) => {
     } finally { setLoading(false); }
   };
   return (
-    <AuthShell title={`${label} sign in`} subtitle="Welcome back. Your campus workspace is ready." eyebrow="YOUR HOSTELMS ACCOUNT">
+    <Shell title={`${label} sign in`} subtitle={targetRole === 'student' ? 'Your room, your people, your everyday campus life.' : 'Welcome back. Your campus workspace is ready.'} eyebrow="YOUR HOSTELMS ACCOUNT">
       <form onSubmit={handleSubmit} className="space-y-5">
         {error && <p role="alert" className="text-sm text-red-700 bg-red-50 border border-red-200 rounded-xl p-3">{error}</p>}
         {targetRole === 'staff' && <fieldset><legend className="text-sm font-medium text-slate-600 mb-2">Sign in as</legend><div className="grid grid-cols-2 gap-2 p-1 bg-indigo-50 border border-indigo-100 rounded-xl">
@@ -66,7 +68,7 @@ const Login = ({ initialRole }) => {
       </form>
       {portal === 'student' && <p className="text-sm text-slate-500 text-center mt-6">New to the hostel? <Link to="/register" className="text-indigo-700 font-semibold">Create an account</Link></p>}
       <a href="/" className="block text-center text-sm text-slate-500 hover:text-indigo-700 mt-5">Choose another portal</a>
-    </AuthShell>
+    </Shell>
   );
 };
 export default Login;

@@ -1,15 +1,73 @@
 {
   "project": "HostelMS",
-  "stack": ["React 19", "Tailwind CSS 3", "Vite"],
+  "stack": [
+    "React 19",
+    "Tailwind CSS 3",
+    "Vite"
+  ],
   "decisions": [
     {
       "direction": "Colorful Vector Studio",
       "scope": "Student, admin, warden, security and local developer interfaces",
       "selected_by": "User selected Vector Art, requested a more colorful version, and authorized application across every role.",
-      "principles": ["Violet illustrated dashboard banners", "Navy role-specific navigation", "Lavender, mint, amber and coral summary cards", "Readable tables and semantic status labels", "Shared responsive components"],
-      "tokens": {"primary": "#6846d1", "sidebar": "#20213e", "background": "#f5f5fc"},
-      "references": ["output/style-gallery/vector-studio.html", "https://21st.dev/community/components/explore/ui-dashboard"],
-      "components": ["CampusBanner", "StatCard", "AuthShell", "Layout", "Sidebar"]
+      "principles": [
+        "Violet illustrated dashboard banners",
+        "Navy role-specific navigation",
+        "Lavender, mint, amber and coral summary cards",
+        "Readable tables and semantic status labels",
+        "Shared responsive components"
+      ],
+      "tokens": {
+        "primary": "#6846d1",
+        "sidebar": "#20213e",
+        "background": "#f5f5fc"
+      },
+      "references": [
+        "output/style-gallery/vector-studio.html",
+        "https://21st.dev/community/components/explore/ui-dashboard"
+      ],
+      "components": [
+        "CampusBanner",
+        "StatCard",
+        "AuthShell",
+        "Layout",
+        "Sidebar"
+      ]
+    },
+    {
+      "direction": "Living Campus login",
+      "scope": "Shared sign-in and registration shell for every portal",
+      "selected_by": "User requested a distinct animated hostel login inspired by the Farmvest landscape video.",
+      "principles": [
+        "Original full-page campus landscape in SVG",
+        "Serif storytelling with a focused evergreen sign-in card",
+        "Moving clouds, trees, students and cyclist",
+        "Pause control, pause-on-form-focus and reduced-motion support",
+        "Existing authentication and role permissions preserved"
+      ],
+      "references": [
+        "https://www.pinterest.com/pin/1060245937252786991/"
+      ],
+      "components": [
+        "AuthShell",
+        "CampusLandscape"
+      ]
+    },
+    {
+      "direction": "After Class student login",
+      "scope": "Student sign-in only; staff and security retain Living Campus",
+      "selected_by": "User requested a more impressive, distinct student login while keeping the staff theme.",
+      "principles": [
+        "Midnight teal and warm amber palette",
+        "Original animated sunset study-room SVG",
+        "Cream sign-in card and clear form controls",
+        "Responsive layout, pause control and reduced-motion support",
+        "No header role navigation"
+      ],
+      "components": [
+        "StudentAuthShell",
+        "StudentRoomScene"
+      ]
     }
   ]
 }
