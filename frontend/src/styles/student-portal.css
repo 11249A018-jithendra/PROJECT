@@ -48,6 +48,81 @@
 .vs-app[data-workspace-role='student'] .vs-page a.text-indigo-700 { color: #33675b; }
 .vs-app[data-workspace-role='student'] .vs-page button:hover { --tw-border-opacity: 1; }
 
+/* Make the selected Vector Studio art direction visible across signed-in staff workspaces too. */
+.vs-app[data-workspace-role='admin'],
+.vs-app[data-workspace-role='warden'],
+.vs-app[data-workspace-role='security'] {
+  --vs-background: #f4f3fc;
+  --vs-surface: #fff;
+  --vs-border: #e2def3;
+  background: #f4f3fc;
+}
+.vs-app:is([data-workspace-role='admin'],[data-workspace-role='warden'],[data-workspace-role='security']) .vs-hero {
+  min-height: 15rem;
+  border-radius: 1.5rem;
+  background: linear-gradient(112deg,#6244cc 0%,#6658dc 52%,#4788b9 100%);
+  box-shadow: 0 12px 30px #5243ad24;
+}
+.vs-app:is([data-workspace-role='admin'],[data-workspace-role='warden'],[data-workspace-role='security']) .vs-campus-art {
+  width: 42%;
+  max-width: 27rem;
+  right: 1.25rem;
+  bottom: -.5rem;
+  filter: drop-shadow(0 9px 8px #27227525);
+}
+.vs-app:is([data-workspace-role='admin'],[data-workspace-role='warden'],[data-workspace-role='security']) .vs-stat {
+  min-height: 8.5rem;
+  border-radius: 1.2rem;
+  box-shadow: 0 5px 16px #37286610;
+}
+.vs-app:is([data-workspace-role='admin'],[data-workspace-role='warden'],[data-workspace-role='security']) .vs-stat-heading svg {
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: .48rem;
+  border-radius: .8rem;
+  background: #ffffffa8;
+}
+.vs-app:is([data-workspace-role='admin'],[data-workspace-role='warden'],[data-workspace-role='security']) .vs-page .bg-white.rounded-2xl {
+  border-radius: 1.2rem;
+  border-color: #e2def3;
+  box-shadow: 0 5px 18px #3728660b;
+}
+.vs-app:is([data-workspace-role='admin'],[data-workspace-role='warden'],[data-workspace-role='security']) .vs-topbar {
+  background: linear-gradient(90deg,#fff 0%,#f7f5ff 100%);
+}
+
+/* Student portal: distinctive campus color and larger illustrations, independent from every auth page. */
+.vs-app[data-workspace-role='student'] .vs-hero {
+  min-height: 16rem;
+  border-radius: 1.5rem;
+  background: linear-gradient(112deg,#28534f 0%,#387467 55%,#709b78 100%);
+  box-shadow: 0 12px 30px #244b3a24;
+}
+.vs-app[data-workspace-role='student'] .vs-campus-art {
+  width: 43%;
+  max-width: 27rem;
+  right: 1.25rem;
+  bottom: -.35rem;
+  filter: drop-shadow(0 9px 8px #163b3430);
+}
+.vs-app[data-workspace-role='student'] .vs-stat {
+  min-height: 8rem;
+  border-radius: 1.2rem;
+  box-shadow: 0 5px 16px #354b3d10;
+}
+.vs-app[data-workspace-role='student'] .vs-stat-heading svg {
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: .48rem;
+  border-radius: .8rem;
+  background: #ffffffa8;
+}
+
+@media (max-width: 767px) {
+  .vs-app:is([data-workspace-role='admin'],[data-workspace-role='warden'],[data-workspace-role='security']) .vs-campus-art,
+  .vs-app[data-workspace-role='student'] .vs-campus-art { width: 38%; right: -.5rem; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .vs-app[data-workspace-role='student'] *,
   .vs-app[data-workspace-role='student'] *::before,
