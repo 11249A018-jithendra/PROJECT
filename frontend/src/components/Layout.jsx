@@ -2,6 +2,7 @@ import { lazy, Suspense } from 'react';
 import Sidebar from './Sidebar';
 import { useAuth } from '../context/AuthContext';
 import { Building2, CalendarDays } from 'lucide-react';
+import '../styles/student-portal.css';
 
 // Students get the floating Hostel Assistant chat on every page.
 const HostelAssistant = lazy(() => import('./HostelAssistant'));
@@ -9,7 +10,7 @@ const HostelAssistant = lazy(() => import('./HostelAssistant'));
 const Layout = ({ children }) => {
   const { user } = useAuth();
   return (
-    <div className="vs-app flex min-h-screen" data-role={user?.real_role || user?.role}>
+    <div className="vs-app flex min-h-screen" data-role={user?.real_role || user?.role} data-workspace-role={user?.role}>
       {/* First Tab stop: jump past the menu straight to the page. */}
       <a
         href="#main-content"

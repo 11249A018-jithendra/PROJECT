@@ -1,0 +1,55 @@
+/* Student workspace theme. Scoped to the authenticated student layout so staff portals keep their own visual system. */
+.vs-app[data-workspace-role='student'] {
+  --student-workspace-ink: #24464a;
+  --student-workspace-muted: #718078;
+  --student-workspace-border: #e8e4d5;
+  --student-workspace-paper: #fffdf7;
+  --student-workspace-teal: #28534f;
+  --student-workspace-gold: #dfad68;
+  --vs-background: #f6f4eb;
+  --vs-surface: #fffdf7;
+  --vs-ink: #24464a;
+  --vs-muted: #718078;
+  --vs-border: #e8e4d5;
+  --vs-violet: #28534f;
+  background: #f6f4eb;
+  color: #24464a;
+}
+
+.vs-app[data-workspace-role='student'] .vs-sidebar { background: #183e46; border-color: #31565a; }
+.vs-app[data-workspace-role='student'] .vs-sidebar .border-slate-700 { border-color: #35585a; }
+.vs-app[data-workspace-role='student'] .vs-sidebar-role,
+.vs-app[data-workspace-role='student'] .vs-sidebar .text-slate-400:not(.vs-nav-link) { color: #b7c7b9; }
+.vs-app[data-workspace-role='student'] .vs-brand-symbol { background: #b88b54; box-shadow: 0 4px 12px #0e293230; }
+.vs-app[data-workspace-role='student'] .vs-nav-caption { color: #b7c7b9; }
+.vs-app[data-workspace-role='student'] .vs-nav-link { color: #c2d0c4; }
+.vs-app[data-workspace-role='student'] .vs-nav-link:hover { background: #244b50; color: white; }
+.vs-app[data-workspace-role='student'] .vs-nav-link[aria-current='page'] { background: #d9aa6b; border-color: #e7bd83; color: #24443f; box-shadow: 0 5px 12px #0e293230; }
+.vs-app[data-workspace-role='student'] .vs-sidebar button.text-red-400 { color: #f2a99a; }
+.vs-app[data-workspace-role='student'] .vs-topbar { background: #fffdf7; border-color: #e8e4d5; color: #687b70; }
+.vs-app[data-workspace-role='student'] .vs-topbar svg { color: #9d8050; }
+.vs-app[data-workspace-role='student'] .vs-workspace-label { color: #778676; }
+.vs-app[data-workspace-role='student'] .vs-page h1,
+.vs-app[data-workspace-role='student'] .vs-page h2,
+.vs-app[data-workspace-role='student'] .vs-page h3 { color: #24464a; }
+.vs-app[data-workspace-role='student'] .vs-page .bg-white.rounded-2xl { background-color: #fffdf7; border-color: #e8e4d5; box-shadow: 0 5px 18px #354b3d0a; }
+.vs-app[data-workspace-role='student'] .vs-page :where(thead) { background-color: #f1efe3; }
+.vs-app[data-workspace-role='student'] .vs-page :where(thead th) { color: #536a5d; }
+.vs-app[data-workspace-role='student'] .vs-page :where(tbody tr:hover) { background-color: #f5f3e9; }
+.vs-app[data-workspace-role='student'] .vs-hero { background: linear-gradient(112deg, #28534f 0%, #31645b 62%, #517765 100%); border-color: #426c5c; box-shadow: 0 8px 22px #244b3a18; }
+.vs-app[data-workspace-role='student'] .vs-hero::before { border-color: #f5dcad12; }
+.vs-app[data-workspace-role='student'] .vs-hero-action button { color: #24443f; border-color: #efe5cf; }
+.vs-app[data-workspace-role='student'] .vs-stat-lilac { --vs-stat-bg: #f0eadb; --vs-stat-border: #e2d7bd; --vs-stat-ink: #745d38; }
+.vs-app[data-workspace-role='student'] .vs-stat-mint { --vs-stat-bg: #e7f0e4; --vs-stat-border: #d0e1d1; --vs-stat-ink: #365f4f; }
+.vs-app[data-workspace-role='student'] .vs-stat-amber { --vs-stat-bg: #fff0d6; --vs-stat-border: #efdbb5; --vs-stat-ink: #8a642c; }
+.vs-app[data-workspace-role='student'] .vs-stat-coral { --vs-stat-bg: #f9e7df; --vs-stat-border: #efd2c6; --vs-stat-ink: #945541; }
+.vs-app[data-workspace-role='student'] .vs-stat-sky { --vs-stat-bg: #e5efed; --vs-stat-border: #cddfda; --vs-stat-ink: #365f61; }
+.vs-app[data-workspace-role='student'] .vs-page a.text-indigo-600,
+.vs-app[data-workspace-role='student'] .vs-page a.text-indigo-700 { color: #33675b; }
+.vs-app[data-workspace-role='student'] .vs-page button:hover { --tw-border-opacity: 1; }
+
+@media (prefers-reduced-motion: reduce) {
+  .vs-app[data-workspace-role='student'] *,
+  .vs-app[data-workspace-role='student'] *::before,
+  .vs-app[data-workspace-role='student'] *::after { scroll-behavior: auto !important; }
+}
