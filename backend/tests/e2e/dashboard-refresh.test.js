@@ -118,7 +118,7 @@ test('security + warden: exit and return change the live gate numbers', async (t
   const gateBefore = await gateView();
   const wBefore = await wardenView();
 
-  let r = await api('POST', '/outpasses/scan', ctx.security, { qr_token: ctx.qr });
+  let r = await api('POST', '/outpasses/scan', ctx.security, { action: 'EXIT', qr_token: ctx.qr });
   assert.equal(r.status, 200);
   assert.equal(r.data.action, 'EXIT');
   let g = await gateView();
@@ -132,7 +132,7 @@ test('security + warden: exit and return change the live gate numbers', async (t
   const adminOut = (await adminView()).summary.totals.outside;
   assert.ok(adminOut >= 1, 'admin dashboard counts them outside');
 
-  r = await api('POST', '/outpasses/scan', ctx.security, { qr_token: ctx.qr });
+  r = await api('POST', '/outpasses/scan', ctx.security, { action: 'RETURN', qr_token: ctx.qr });
   assert.equal(r.status, 200);
   assert.equal(r.data.action, 'RETURN');
   w = await wardenView();

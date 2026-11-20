@@ -4,6 +4,7 @@
 const path = require('path');
 require('dotenv').config({ path: path.join(__dirname, '..', '..', '.env'), quiet: true });
 const jwt = require('jsonwebtoken');
+const { passwordVersion } = require('../../utils/sessionToken');
 const supabase = require('../../supabase');
 
 const BASE = process.env.E2E_BASE || 'http://localhost:5000/api';
@@ -23,9 +24,9 @@ const api = async (method, urlPath, token, body) => {
 
 // Short-lived token for an existing active account of this role.
 const tokenForRole = async (role) => {
-  const { data } = await supabase.from('users').select('_id').eq('role', role).eq('is_active', true).limit(1);
+  const { data } = await supabase.from('users').select('_id, password_changed_at').eq('role', role).eq('is_active', true).limit(1);
   if (!data?.length) throw new Error(`No active ${role} account to test with.`);
-  return jwt.sign({ id: data[0]._id }, process.env.JWT_SECRET, { expiresIn: '15m' });
+  return jwt.sign({ id: data[0]._id, pwd: passwordVersion(data[0].password_changed_at) }, process.env.JWT_SECRET, { expiresIn: '15m' });
 };
 
 // Records everything a test run creates so cleanup can remove it all.

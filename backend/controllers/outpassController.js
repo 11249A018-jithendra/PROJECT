@@ -375,11 +375,12 @@ const updateOutpass = async (req, res) => {
       .from('outpasses')
       .update(updates)
       .eq('_id', req.params.id)
+      .eq('status', current.status)
       .select()
-      .single();
+      .maybeSingle();
 
     if (error) throw error;
-    if (!updated) return res.status(404).json({ message: 'Outpass not found' });
+    if (!updated) return res.status(409).json({ message: 'This outpass changed while you were editing it. Refresh and try again.' });
 
     res.json(updated);
   } catch (error) {
@@ -524,14 +525,14 @@ const applyGateAction = async (outpass, action, guardId, { method = 'QR', reason
   return { ok: true, outpass: updated };
 };
 
-// @desc    Security scans a QR code. Auto-detects EXIT vs RETURN from the
-//          outpass's current status and performs validation + the state
-//          transition + audit logging as one backend-authoritative action.
-// @route   POST /api/outpasses/scan
-// @access  Private (security)
-const scanQr = async (req, res) => {
+// Preview and commit share the same authoritative gate checks. Committing
+// requires the previewed action, so retrying an EXIT cannot become a RETURN.
+const processQr = async (req, res, preview = false) => {
   const guardId = req.user._id;
   try {
+    if (!preview && !['EXIT', 'RETURN'].includes(req.body.action)) {
+      return res.status(400).json({ valid: false, message: 'Verify the QR first and provide action EXIT or RETURN.' });
+    }
     const qrToken = (req.body.qr_token || '').trim();
     if (!qrToken) {
       return res.status(400).json({ valid: false, message: 'No QR token provided.' });
@@ -555,6 +556,10 @@ const scanQr = async (req, res) => {
 
     const decision = await decideAtGate(outpass);
     if (decision.message) return fail(decision.message, decision.action || null);
+    if (preview) return res.json({ valid: true, action: decision.action });
+    if (req.body.action !== decision.action) {
+      return fail('This outpass changed after verification. Scan it again.', req.body.action);
+    }
 
     const result = await applyGateAction(outpass, decision.action, guardId);
     if (!result.ok) return fail(result.message, decision.action);
@@ -568,6 +573,10 @@ const scanQr = async (req, res) => {
     res.status(500).json({ valid: false, message: error.message });
   }
 };
+
+// POST /api/outpasses/scan/verify only reads; /scan commits the selected action.
+const verifyQr = (req, res) => processQr(req, res, true);
+const scanQr = (req, res) => processQr(req, res);
 
 // ---------------------------------------------------------------------------
 // Manual / Type Token: the guard types the 8-character token shown under the
@@ -906,6 +915,7 @@ module.exports = {
   updateOutpass,
   getOutpassQr,
   scanQr,
+  verifyQr,
   getCurrentlyOutside,
   getOverdueOutpasses,
   getTodaySummary,

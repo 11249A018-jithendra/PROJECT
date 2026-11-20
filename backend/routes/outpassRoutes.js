@@ -11,6 +11,7 @@ const {
   updateOutpass,
   getOutpassQr,
   scanQr,
+  verifyQr,
   getOverdueOutpasses,
   gateLookup,
   manualGateEntry,
@@ -47,6 +48,7 @@ router.get('/gate-lookup', protect, securityViewAccess, gateLookup);
 
 // Scanning marks a student out/in at the gate: security (admin may override).
 router.post('/scan', protect, authorize('security', 'admin'), scanQr);
+router.post('/scan/verify', protect, authorize('security', 'admin'), verifyQr);
 
 // Manual / Type Token: the 8-character token under the QR, typed by the guard.
 // The format and every rule are checked in the controller (never trusted from the page).

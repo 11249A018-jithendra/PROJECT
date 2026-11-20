@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const { passwordVersion } = require('../utils/sessionToken');
 const supabase = require('../supabase');
 const { parsePage, pageResponse } = require('../utils/paginate');
 const { passwordProblem, hashPassword, withoutPassword } = require('../utils/password');
@@ -149,12 +150,12 @@ const resetPassword = async (req, res) => {
 // works on this computer (middleware/auth.js) and every change is audited.
 const impersonate = async (req, res) => {
   try {
-    const { data: target } = await supabase.from('users').select('_id, name, role, is_active').eq('_id', req.body.user_id).maybeSingle();
+    const { data: target } = await supabase.from('users').select('_id, name, role, is_active, password_changed_at').eq('_id', req.body.user_id).maybeSingle();
     if (!target) return res.status(404).json({ message: 'User not found.' });
     if (target.role === 'developer') return res.status(400).json({ message: 'Developers cannot be impersonated.' });
     if (target.is_active === false) return res.status(400).json({ message: 'This account is deactivated — re-activate it first.' });
     const portal = portalForRole(target.role);
-    const token = jwt.sign({ id: target._id, portal, imp_by: req.user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    const token = jwt.sign({ id: target._id, portal, imp_by: req.user._id, pwd: passwordVersion(target.password_changed_at) }, process.env.JWT_SECRET, { expiresIn: '1h' });
     await audit(req, 'IMPERSONATE', `${target.name} (${target.role})`);
     res.json({ token, portal, user: { _id: target._id, name: target.name, role: target.role } });
   } catch (error) {
@@ -168,7 +169,7 @@ const portalToken = async (req, res) => {
   try {
     const { portal } = req.body;
     if (!PORTAL_ROLES[portal] || portal === 'developer') return res.status(400).json({ message: 'Choose student, staff or gate.' });
-    const token = jwt.sign({ id: req.user._id, portal }, process.env.JWT_SECRET, { expiresIn: '8h' });
+    const token = jwt.sign({ id: req.user._id, portal, pwd: passwordVersion(req.user.password_changed_at) }, process.env.JWT_SECRET, { expiresIn: '8h' });
     await audit(req, 'OPEN_PORTAL', portal);
     res.json({ token, portal });
   } catch (error) {

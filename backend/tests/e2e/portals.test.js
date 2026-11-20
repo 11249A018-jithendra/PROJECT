@@ -66,8 +66,8 @@ test('staff portal: choosing Admin vs Warden', async () => {
 test('only security/admin scan at the gate; outpasses are only for students', async () => {
   const warden = (await login(ctx.warden.email, 'Portal#2026x', 'staff')).data.token;
   const guard = (await login(ctx.security.email, 'Portal#2026x', 'gate')).data.token;
-  assert.equal((await api('POST', '/outpasses/scan', warden, { qr_token: 'not-a-real-token' })).status, 403, 'warden cannot scan');
-  assert.notEqual((await api('POST', '/outpasses/scan', guard, { qr_token: 'not-a-real-token' })).status, 403, 'security may scan');
+  assert.equal((await api('POST', '/outpasses/scan', warden, { action: 'EXIT', qr_token: 'not-a-real-token' })).status, 403, 'warden cannot scan');
+  assert.notEqual((await api('POST', '/outpasses/scan', guard, { action: 'EXIT', qr_token: 'not-a-real-token' })).status, 403, 'security may scan');
   const own = await api('POST', '/outpasses', guard, { reason: 'x', destination: 'x', leave_datetime: '2030-01-01T10:00', return_datetime: '2030-01-01T12:00' });
   assert.equal(own.status, 403, 'security cannot request an outpass for themselves');
 });

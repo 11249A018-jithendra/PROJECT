@@ -76,13 +76,15 @@ const ScanQr = () => {
     busyRef.current = true;
     setSubmitting(true);
     try {
-      const res = await api.post('/outpasses/scan', { qr_token: qrToken });
+      await stopCamera();
+      const check = await api.post('/outpasses/scan/verify', { qr_token: qrToken });
+      const res = await api.post('/outpasses/scan', { qr_token: qrToken, action: check.data.action });
       setResult(res.data);
     } catch (err) {
       setResult(err.response?.data || { valid: false, message: 'Scan failed. Please try again.' });
     } finally {
       setSubmitting(false);
-      busyRef.current = false;
+      // Keep this scan latched until the guard explicitly chooses Scan Next.
     }
   };
 
@@ -101,7 +103,7 @@ const ScanQr = () => {
       );
       scannerRef.current = scanner;
       setCameraOn(true);
-    } catch (e) {
+    } catch {
       setCameraError('Could not access the camera. You can still enter the QR token manually below.');
     }
   };
@@ -110,7 +112,7 @@ const ScanQr = () => {
     if (scannerRef.current) {
       try {
         await scannerRef.current.clear();
-      } catch (e) {
+      } catch {
         // ignore — element may already be gone
       }
       scannerRef.current = null;
@@ -135,7 +137,7 @@ const ScanQr = () => {
         const decodedText = await html5QrCode.scanFile(file, true);
         await html5QrCode.clear();
         submitScan(decodedText);
-      } catch (scanErr) {
+      } catch {
         setFileError('Could not read a QR code from this image. Please try a clearer picture or enter the token.');
       }
     } catch (err) {
@@ -147,6 +149,7 @@ const ScanQr = () => {
   };
 
   const scanNext = () => {
+    busyRef.current = false;
     setResult(null);
   };
 

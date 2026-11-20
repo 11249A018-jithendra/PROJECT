@@ -103,7 +103,7 @@ test('10. a failed approval changes nothing (atomic)', async () => {
   ctx.req3 = r.data._id;
   r = await api('POST', '/outpasses', ctx.s3.token, { reason: 'home', destination: 'Home', leave_datetime: hours(-1), return_datetime: hours(24), parent_consent: true, pass_type: 'Home' });
   const op = await api('PUT', `/outpasses/${r.data._id}/approve`, ctx.w1.token);
-  await api('POST', '/outpasses/scan', await tokenForRole('security'), { qr_token: op.data.qr_token });
+  await api('POST', '/outpasses/scan', await tokenForRole('security'), { action: 'EXIT', qr_token: op.data.qr_token });
 
   r = await api('PUT', `/exit-requests/${ctx.req3}/approve`, ctx.admin, {});
   assert.equal(r.status, 409);

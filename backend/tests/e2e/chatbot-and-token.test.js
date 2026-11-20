@@ -217,16 +217,21 @@ test('gate QR: scanning still records EXIT then RETURN, and shares the token rul
   const qr = r.data.qr_token;
   const code = (await api('GET', `/outpasses/${id}/qr`, ctx.s2.token)).data.gate_code;
 
-  r = await api('POST', '/outpasses/scan', ctx.security, { qr_token: qr });
+  r = await api('POST', '/outpasses/scan/verify', ctx.security, { qr_token: qr });
   assert.equal(r.status, 200);
   assert.equal(r.data.action, 'EXIT');
+  assert.equal((await api('GET', '/outpasses/my', ctx.s2.token)).data.find((o) => o._id === id).status, 'Approved', 'preview does not record an exit');
+  r = await api('POST', '/outpasses/scan', ctx.security, { action: 'EXIT', qr_token: qr });
+  assert.equal(r.status, 200);
+  assert.equal(r.data.action, 'EXIT');
+  assert.equal((await api('POST', '/outpasses/scan', ctx.security, { action: 'EXIT', qr_token: qr })).status, 409, 'retrying the exit cannot record a return');
   // Exit by QR, return by typed token: one outpass, one workflow.
   r = await api('POST', '/outpasses/token/verify', ctx.security, { token: code });
   assert.equal(r.data.action, 'RETURN');
-  r = await api('POST', '/outpasses/scan', ctx.security, { qr_token: qr });
+  r = await api('POST', '/outpasses/scan', ctx.security, { action: 'RETURN', qr_token: qr });
   assert.equal(r.status, 200);
   assert.equal(r.data.action, 'RETURN');
-  assert.equal((await api('POST', '/outpasses/scan', ctx.security, { qr_token: qr })).status, 409, 'duplicate return refused');
+  assert.equal((await api('POST', '/outpasses/scan', ctx.security, { action: 'RETURN', qr_token: qr })).status, 409, 'duplicate return refused');
   assert.equal((await api('POST', '/outpasses/token/confirm', ctx.security, { token: code, action: 'RETURN' })).status, 404);
 });
 

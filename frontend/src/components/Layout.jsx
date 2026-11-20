@@ -1,6 +1,7 @@
 import { lazy, Suspense } from 'react';
 import Sidebar from './Sidebar';
 import { useAuth } from '../context/AuthContext';
+import { Building2, CalendarDays } from 'lucide-react';
 
 // Students get the floating Hostel Assistant chat on every page.
 const HostelAssistant = lazy(() => import('./HostelAssistant'));
@@ -8,7 +9,7 @@ const HostelAssistant = lazy(() => import('./HostelAssistant'));
 const Layout = ({ children }) => {
   const { user } = useAuth();
   return (
-    <div className="flex min-h-screen bg-slate-50">
+    <div className="vs-app flex min-h-screen" data-role={user?.real_role || user?.role}>
       {/* First Tab stop: jump past the menu straight to the page. */}
       <a
         href="#main-content"
@@ -18,8 +19,11 @@ const Layout = ({ children }) => {
       </a>
       <Sidebar />
       <main id="main-content" tabIndex={-1} className="flex-1 lg:ml-64 min-h-screen min-w-0 focus:outline-none">
-        {/* Extra top space on phones so the floating menu button never covers the page title. */}
-        <div className="p-6 pt-20 lg:p-8 max-w-7xl mx-auto">
+        <header className="vs-topbar">
+          <div className="flex items-center gap-2 min-w-0"><Building2 size={17} aria-hidden="true" /><span>HostelMS</span><span className="vs-topbar-divider">/</span><span className="capitalize truncate">{user?.real_role || user?.role} workspace</span></div>
+          <span className="vs-workspace-label"><CalendarDays size={15} aria-hidden="true" /><span>Campus life, connected</span></span>
+        </header>
+        <div className="vs-page p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto">
           {children}
         </div>
       </main>

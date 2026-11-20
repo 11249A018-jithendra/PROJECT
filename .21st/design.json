@@ -1,0 +1,15 @@
+{
+  "project": "HostelMS",
+  "stack": ["React 19", "Tailwind CSS 3", "Vite"],
+  "decisions": [
+    {
+      "direction": "Colorful Vector Studio",
+      "scope": "Student, admin, warden, security and local developer interfaces",
+      "selected_by": "User selected Vector Art, requested a more colorful version, and authorized application across every role.",
+      "principles": ["Violet illustrated dashboard banners", "Navy role-specific navigation", "Lavender, mint, amber and coral summary cards", "Readable tables and semantic status labels", "Shared responsive components"],
+      "tokens": {"primary": "#6846d1", "sidebar": "#20213e", "background": "#f5f5fc"},
+      "references": ["output/style-gallery/vector-studio.html", "https://21st.dev/community/components/explore/ui-dashboard"],
+      "components": ["CampusBanner", "StatCard", "AuthShell", "Layout", "Sidebar"]
+    }
+  ]
+}

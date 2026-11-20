@@ -1,4 +1,5 @@
 import { RefreshCw } from 'lucide-react';
+import CampusBanner from './CampusBanner';
 import { formatTime } from '../../utils/format';
 
 // "Refresh" for a dashboard: icon + label (icon only on small screens, with a
@@ -25,13 +26,7 @@ export const RefreshButton = ({ onRefresh, refreshing, loading, lastUpdated }) =
 // Page title on the left, Refresh on the right (wraps under the title on a phone).
 const DashboardHeader = ({ title, subtitle, refresh }) => (
   <div className="mb-8">
-    <div className="flex flex-wrap items-start justify-between gap-4">
-      <div className="min-w-0">
-        <h1 className="text-2xl font-bold text-slate-800">{title}</h1>
-        <p className="text-slate-500 mt-1">{subtitle}</p>
-      </div>
-      <RefreshButton onRefresh={refresh.refresh} refreshing={refresh.refreshing} loading={refresh.loading} lastUpdated={refresh.lastUpdated} />
-    </div>
+    <CampusBanner title={title} subtitle={subtitle} action={<RefreshButton onRefresh={refresh.refresh} refreshing={refresh.refreshing} loading={refresh.loading} lastUpdated={refresh.lastUpdated} />} />
     {refresh.error && (
       <p role="alert" className="text-sm text-red-600 bg-red-50 border border-red-100 rounded-xl px-3 py-2 mt-4">
         {refresh.error} Showing the last data loaded.

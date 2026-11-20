@@ -107,7 +107,7 @@ test('home visit: exit auto-marks Absent, overdue alert, manual return', async (
     const res = await api('POST', '/outpasses', student.token, { reason: `${TAG} home`, destination: 'Home', leave_datetime: hours(-1), return_datetime: hours(48), parent_consent: true, pass_type: 'Home' });
     assert.equal(res.status, 201);
     const approved = await api('PUT', `/outpasses/${res.data._id}/approve`, ctx.warden);
-    const scan = await api('POST', '/outpasses/scan', ctx.security, { qr_token: approved.data.qr_token });
+    const scan = await api('POST', '/outpasses/scan', ctx.security, { action: 'EXIT', qr_token: approved.data.qr_token });
     assert.equal(scan.data.action, 'EXIT');
     return res.data;
   };

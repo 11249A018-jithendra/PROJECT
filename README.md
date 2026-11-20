@@ -71,6 +71,8 @@ It enables administrators to manage hostel operations, wardens to supervise stud
 - Server-side token validation.
 - Gate scan history and student status tracking.
 
+QR API clients first call `POST /api/outpasses/scan/verify` with `{ "qr_token": "..." }`, then send the returned `action` (`EXIT` or `RETURN`) with the same token to `POST /api/outpasses/scan`. The commit endpoint requires an explicit action so retrying an exit cannot accidentally record a return. Deploy frontend and backend updates together; older clients that omit `action` receive HTTP 400.
+
 ### 🏠 Live Hostel Status Tracking
 - Monitor students inside and outside the hostel.
 - Update live status through successful gate scans.
@@ -105,6 +107,20 @@ It enables administrators to manage hostel operations, wardens to supervise stud
 - Security support features.
 
 ## 🛠️ Technology Stack
+
+### Local development and verification
+
+The interface uses the colorful Vector Studio design across student, admin, warden, security and local developer screens. Shared components keep the violet campus banners, navy navigation, colorful summaries and responsive forms consistent.
+
+Run `npm ci` in both `frontend/` and `backend/`. Copy each folder's `.env.example` to `.env` and configure the backend's `SUPABASE_URL`, `SUPABASE_SERVICE_KEY` and `JWT_SECRET`. The frontend must point `VITE_API_URL` at the running API. Keep the Supabase service key in the backend only.
+
+- Frontend: run `npm run dev` in `frontend/`, then open `http://localhost:5173/` to choose a portal.
+- Backend: run `npm run dev` in `backend/` once its environment is configured.
+- Frontend checks: `npm test`, `npm run lint`, and `npm run build` in `frontend/`.
+- Backend unit tests: `npm test` in `backend/`.
+- Live workflow tests: `npm run test:e2e` in `backend/`. These require a running backend and a migrated test Supabase project with active admin and security accounts. They create and remove test records, so use an isolated test project.
+
+Frontend tests render the actual role screens, sign-in forms, navigation, summary cards and access guards without a database. They supplement the live workflow tests; they do not verify database operations.
 
 The project uses modern web technologies for frontend development, backend services, database management, and deployment.
 

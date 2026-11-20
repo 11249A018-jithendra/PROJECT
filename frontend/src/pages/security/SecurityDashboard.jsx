@@ -4,6 +4,7 @@ import Layout from '../../components/Layout';
 import { useAuth } from '../../context/AuthContext';
 import api from '../../api/axios';
 import DashboardHeader from '../../components/ui/DashboardHeader';
+import StatCard from '../../components/ui/StatCard';
 import useDashboardData from '../../hooks/useDashboardData';
 import { DoorOpen, LogOut, CheckCircle2, AlertTriangle, QrCode, ArrowRight, History, Keyboard } from 'lucide-react';
 
@@ -27,10 +28,10 @@ const SecurityDashboard = () => {
   const { loading } = refresh;
 
   const cards = [
-    { label: 'Currently Outside', value: stats?.currentlyOutside, icon: DoorOpen, color: 'text-orange-600', bg: 'bg-orange-50', border: 'border-orange-100' },
-    { label: "Today's Exits", value: stats?.todaysExits, icon: LogOut, color: 'text-indigo-600', bg: 'bg-indigo-50', border: 'border-indigo-100' },
-    { label: "Today's Returns", value: stats?.todaysReturns, icon: CheckCircle2, color: 'text-emerald-600', bg: 'bg-emerald-50', border: 'border-emerald-100' },
-    { label: 'Overdue', value: stats?.overdue, icon: AlertTriangle, color: 'text-red-600', bg: 'bg-red-50', border: 'border-red-100' },
+    { label: 'Currently Outside', value: stats?.currentlyOutside, icon: DoorOpen, tone: 'amber' },
+    { label: "Today's Exits", value: stats?.todaysExits, icon: LogOut, tone: 'lilac' },
+    { label: "Today's Returns", value: stats?.todaysReturns, icon: CheckCircle2, tone: 'mint' },
+    { label: 'Overdue', value: stats?.overdue, icon: AlertTriangle, tone: 'coral' },
   ];
 
   return (
@@ -38,16 +39,8 @@ const SecurityDashboard = () => {
       <DashboardHeader title={`Welcome, ${user?.name?.split(' ')[0]}`} subtitle="Gate scanning and student movement overview" refresh={refresh} />
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        {cards.map(({ label, value, icon: Icon, color, bg, border }) => (
-          <div key={label} className={`bg-white rounded-2xl p-5 shadow-sm border ${border}`}>
-            <div className={`w-11 h-11 ${bg} rounded-xl flex items-center justify-center mb-4`}>
-              <Icon size={22} className={color} />
-            </div>
-            <p className="text-3xl font-bold text-slate-800">
-              {loading ? <span className="animate-pulse text-slate-300">—</span> : (value ?? 0)}
-            </p>
-            <p className="text-slate-500 text-sm mt-1">{label}</p>
-          </div>
+        {cards.map(({ label, value, icon, tone }) => (
+          <StatCard key={label} label={label} value={value} icon={icon} loading={loading} tone={tone} />
         ))}
       </div>
 

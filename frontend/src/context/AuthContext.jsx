@@ -1,9 +1,8 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { useContext, useState, useEffect } from 'react';
+import AuthContext from './AuthState';
 import api from '../api/axios';
 import { clearAllQrs } from '../utils/offlineQr';
 import { getToken, setToken, clearToken, currentPortal } from '../portal';
-
-const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);

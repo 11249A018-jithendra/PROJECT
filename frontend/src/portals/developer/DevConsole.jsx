@@ -1,3 +1,5 @@
+import StatCard from '../../components/ui/StatCard';
+import CampusBanner from '../../components/ui/CampusBanner';
 import { useCallback, useEffect, useState } from 'react';
 import api from '../../api/axios';
 import { useAuth } from '../../context/AuthContext';
@@ -33,11 +35,8 @@ const Card = ({ title, children, action }) => (
   </div>
 );
 
-const Stat = ({ label, value, tone = 'text-slate-800' }) => (
-  <div className="bg-slate-50 rounded-xl p-4">
-    <p className="text-xs text-slate-500">{label}</p>
-    <p className={`text-2xl font-bold mt-1 ${tone}`}>{value}</p>
-  </div>
+const Stat = ({ label, value, tone = '' }) => (
+  <StatCard label={label} value={value} tone={tone.includes('red') ? 'coral' : tone.includes('green') ? 'mint' : 'lilac'} />
 );
 
 const Pager = ({ page, pages, onPage }) => (pages > 1 ? (
@@ -449,8 +448,8 @@ const DevConsole = () => {
   if (!me) return null;
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      <header className="bg-white border-b border-slate-100">
+    <div className="vs-app min-h-screen">
+      <header className="vs-dev-header border-b border-slate-100">
         <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2 text-slate-800 font-semibold"><Terminal size={20} className="text-indigo-600" /> Developer console</div>
           <div className="flex items-center gap-3 text-sm">
@@ -459,7 +458,8 @@ const DevConsole = () => {
           </div>
         </div>
       </header>
-      <main className="max-w-6xl mx-auto px-4 py-6 space-y-5">
+      <main className="vs-page max-w-6xl mx-auto px-4 py-6 space-y-5">
+        <CampusBanner title="Developer console" subtitle="A clear view of accounts, portal access and system health." eyebrow="HOSTELMS · LOCAL DEVELOPER WORKSPACE" />
         <div className="flex gap-2 overflow-x-auto">
           {TABS.map(([key, label, Icon]) => (
             <button key={key} onClick={() => setTab(key)} className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm whitespace-nowrap ${tab === key ? 'bg-indigo-600 text-white' : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'}`}>

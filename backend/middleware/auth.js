@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const supabase = require('../supabase');
 const { withoutPassword } = require('../utils/password');
+const { sessionInvalidated } = require('../utils/sessionToken');
 const { PORTAL_ROLES, developerAllowed } = require('../utils/portals');
 
 const DEV_ONLY_LOCAL = 'Developer access works only on the developer’s own computer.';
@@ -46,7 +47,7 @@ const protect = async (req, res, next) => {
         return res.status(401).json({ message: 'Account deactivated. Contact the administrator.' });
       }
       // A password reset invalidates every token issued before it.
-      if (user.password_changed_at && decoded.iat < Math.floor(new Date(user.password_changed_at).getTime() / 1000)) {
+      if (sessionInvalidated(decoded, user.password_changed_at)) {
         return res.status(401).json({ message: 'Session expired after a password change. Please log in again.' });
       }
 

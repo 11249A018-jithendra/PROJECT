@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { loginFor } from '../utils/roleRoutes';
@@ -7,7 +7,7 @@ import NotificationBell from './NotificationBell';
 import ChangePasswordModal from './ChangePasswordModal';
 import {
   LayoutDashboard, User, AlertCircle, FileText,
-  Users, LogOut, Menu, X, Shield, CheckCircle, Megaphone, LifeBuoy,
+  Users, LogOut, Menu, X, CheckCircle, Megaphone, LifeBuoy,
   ClipboardList, DoorOpen, QrCode, History, UserCog, Building2, MapPin, BedDouble, Wrench, UserCheck, Smartphone, DoorClosed, Archive, UtensilsCrossed, KeyRound, Siren
 } from 'lucide-react';
 
@@ -76,6 +76,35 @@ const Sidebar = () => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const asideRef = useRef(null);
+
+  useEffect(() => {
+    if (!open) return undefined;
+    const opener = document.activeElement;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    asideRef.current?.querySelector('a')?.focus();
+    const closeOnEscape = (event) => {
+      if (event.key === 'Escape') setOpen(false);
+      if (event.key === 'Tab') {
+        const items = [document.getElementById('workspace-menu-toggle'), ...asideRef.current.querySelectorAll('a[href], button:not([disabled]), input:not([disabled])')].filter(element => element && element.offsetParent !== null);
+        const first = items[0];
+        const last = items[items.length - 1];
+        if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus(); }
+        else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); }
+      }
+    };
+    const desktop = window.matchMedia('(min-width: 1024px)');
+    const closeOnDesktop = event => { if (event.matches) setOpen(false); };
+    desktop.addEventListener('change', closeOnDesktop);
+    document.addEventListener('keydown', closeOnEscape);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener('keydown', closeOnEscape);
+      desktop.removeEventListener('change', closeOnDesktop);
+      opener?.focus();
+    };
+  }, [open]);
 
   // The developer can open any portal: show that portal's menu, not admin's.
   const viewRole = user?.is_developer ? (PORTAL_VIEW_ROLE[currentPortal()] || 'admin') : user?.role;
@@ -91,8 +120,12 @@ const Sidebar = () => {
     <>
       {/* Mobile toggle */}
       <button
+        id="workspace-menu-toggle"
         onClick={() => setOpen(!open)}
-        className="fixed top-4 left-4 z-50 lg:hidden bg-indigo-600 text-white p-2 rounded-lg shadow-lg"
+        className="vs-mobile-menu fixed top-3 left-4 z-50 lg:hidden bg-indigo-600 text-white p-2.5 rounded-xl shadow-lg"
+        aria-label={open ? 'Close navigation' : 'Open navigation'}
+        aria-expanded={open}
+        aria-controls="workspace-navigation"
       >
         {open ? <X size={20} /> : <Menu size={20} />}
       </button>
@@ -106,25 +139,26 @@ const Sidebar = () => {
       )}
 
       {/* Sidebar */}
-      <aside className={`fixed top-0 left-0 h-full w-64 bg-slate-900 text-white z-40 flex flex-col transition-transform duration-300
-        ${open ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0`}>
+      <aside ref={asideRef} id="workspace-navigation" className={`vs-sidebar fixed top-0 left-0 h-full w-64 text-white z-40 flex flex-col transition-transform duration-300
+        ${open ? 'translate-x-0 visible' : '-translate-x-full invisible'} lg:translate-x-0 lg:visible`}>
 
         {/* Logo */}
         <div className="p-6 border-b border-slate-700">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center">
-              <Shield size={20} />
+            <div className="vs-brand-symbol w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center">
+              <Building2 size={22} aria-hidden="true" />
             </div>
             <div className="flex-1">
               <p className="font-bold text-lg leading-tight">HostelMS</p>
-              <p className="text-slate-400 text-xs capitalize">{viewRole} Portal{user?.is_developer ? ' · developer' : ''}</p>
+              <p className="vs-sidebar-role text-xs capitalize">{viewRole} Portal{user?.is_developer ? ' · developer' : ''}</p>
             </div>
             <NotificationBell />
           </div>
         </div>
 
         {/* Nav Links */}
-        <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
+        <nav className="flex-1 p-4 space-y-1 overflow-y-auto" aria-label={`${viewRole} navigation`}>
+          <p className="vs-nav-caption">Workspace</p>
           {links.map(({ to, icon: Icon, label }) => (
             <NavLink
               key={to}
@@ -132,7 +166,7 @@ const Sidebar = () => {
               end={HOME_PATHS.includes(to)}
               onClick={() => setOpen(false)}
               className={({ isActive }) =>
-                `flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200
+                `vs-nav-link flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200
                 ${isActive
                   ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/25'
                   : 'text-slate-400 hover:bg-slate-800 hover:text-white'

@@ -1,5 +1,5 @@
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
+const { generateToken } = require('../utils/sessionToken');
 const supabase = require('../supabase');
 const { hasHostelTracking } = require('../utils/schema');
 const { passwordProblem, hashPassword } = require('../utils/password');
@@ -8,15 +8,6 @@ const limiter = require('../utils/loginLimiter');
 const { notifyUsers } = require('../utils/notify');
 
 const PORTAL_NAMES = { student: 'Student portal', staff: 'Staff portal (admin & warden)', gate: 'Gate portal (security)', developer: 'Developer console' };
-
-// `portal` (when given) locks the token to that portal — see middleware/auth.js.
-// "Remember me" sign-ins last 30 days; others 12 hours.
-const generateToken = (id, portal = null, remember = true) => {
-  const claims = { id };
-  if (portal) claims.portal = portal;
-  if (remember) claims.rem = true;
-  return jwt.sign(claims, process.env.JWT_SECRET, { expiresIn: remember ? '30d' : '12h' });
-};
 
 // Case-insensitive exact match for ilike (escape its wildcards).
 const likeExact = (v) => String(v).replace(/[\\%_]/g, (c) => `\\${c}`);
@@ -174,7 +165,7 @@ const loginUser = async (req, res) => {
       hostel_id: user.hostel_id ?? null,
       home_address: user.home_address ?? null,
       portal,
-      token: generateToken(user._id, portal, remember),
+      token: generateToken(user._id, portal, remember, user.password_changed_at),
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -217,9 +208,8 @@ const changePassword = async (req, res) => {
       .eq('_id', user._id);
     if (error) throw error;
 
-    // Issued after password_changed_at, so this token stays valid while older ones don't.
-    // Keep the same portal lock as the session that made the change.
-    res.json({ message: 'Password changed. You have been signed out on other devices.', token: generateToken(user._id, req.tokenPortal || null, req.tokenRemember) });
+    // Bind the new session to this password version, preserving its portal and lifetime.
+    res.json({ message: 'Password changed. You have been signed out on other devices.', token: generateToken(user._id, req.tokenPortal || null, req.tokenRemember, changedAt) });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

@@ -6,6 +6,7 @@ import StatusBadge from '../../components/StatusBadge';
 import api from '../../api/axios';
 import EmergencyHelpCard from '../../components/EmergencyHelpCard';
 import DashboardHeader from '../../components/ui/DashboardHeader';
+import StatCard from '../../components/ui/StatCard';
 import useDashboardData from '../../hooks/useDashboardData';
 import { EmptyState, SkeletonRows } from '../../components/ui/Feedback';
 import { formatDate } from '../../utils/format';
@@ -51,10 +52,10 @@ const StudentDashboard = () => {
   const messLoading = loading;
 
   const statCards = [
-    { label: 'Total Complaints', value: complaints.length, icon: AlertCircle, color: 'text-amber-500', bg: 'bg-amber-50' },
-    { label: 'Pending Complaints', value: complaints.filter(c => c.status === 'Pending').length, icon: AlertCircle, color: 'text-red-500', bg: 'bg-red-50' },
-    { label: 'Outpass Requests', value: outpasses.length, icon: FileText, color: 'text-blue-500', bg: 'bg-blue-50' },
-    { label: 'Approved Outpasses', value: outpasses.filter(o => o.status === 'Approved').length, icon: FileText, color: 'text-green-500', bg: 'bg-green-50' },
+    { label: 'Total Complaints', value: complaints.length, icon: AlertCircle, tone: 'lilac' },
+    { label: 'Pending Complaints', value: complaints.filter(c => c.status === 'Pending').length, icon: AlertCircle, tone: 'coral' },
+    { label: 'Outpass Requests', value: outpasses.length, icon: FileText, tone: 'sky' },
+    { label: 'Approved Outpasses', value: outpasses.filter(o => o.status === 'Approved').length, icon: FileText, tone: 'mint' },
   ];
 
   return (
@@ -63,26 +64,26 @@ const StudentDashboard = () => {
       <DashboardHeader title={`Welcome back, ${user?.name?.split(' ')[0]}`} subtitle="Here's an overview of your hostel activity." refresh={refresh} />
 
       {/* Profile Summary */}
-      <div className="bg-gradient-to-br from-indigo-600 to-indigo-700 rounded-2xl p-6 text-white mb-8 shadow-lg shadow-indigo-200">
+      <div className="vs-student-profile bg-white rounded-2xl p-6 text-slate-800 mb-8 border border-indigo-100">
         <div className="flex items-start gap-4">
-          <div className="w-14 h-14 bg-white/20 rounded-full flex items-center justify-center text-2xl font-bold flex-shrink-0">
+          <div className="w-14 h-14 bg-indigo-100 text-indigo-700 rounded-full flex items-center justify-center text-2xl font-bold flex-shrink-0">
             {user?.name?.[0]?.toUpperCase()}
           </div>
           <div className="flex-1 grid grid-cols-2 sm:grid-cols-4 gap-4">
             <div>
-              <p className="text-indigo-200 text-xs">Name</p>
+              <p className="text-slate-500 text-xs">Name</p>
               <p className="font-semibold text-sm">{user?.name}</p>
             </div>
             <div>
-              <p className="text-indigo-200 text-xs">Roll No.</p>
+              <p className="text-slate-500 text-xs">Roll No.</p>
               <p className="font-semibold text-sm">{user?.roll_no || 'N/A'}</p>
             </div>
             <div>
-              <p className="text-indigo-200 text-xs">Room</p>
+              <p className="text-slate-500 text-xs">Room</p>
               <p className="font-semibold text-sm flex items-center gap-1"><Home size={12} /> {user?.room_no || 'N/A'}</p>
             </div>
             <div>
-              <p className="text-indigo-200 text-xs">Course</p>
+              <p className="text-slate-500 text-xs">Course</p>
               <p className="font-semibold text-sm">{user?.course_year || 'N/A'}</p>
             </div>
           </div>
@@ -91,14 +92,8 @@ const StudentDashboard = () => {
 
       {/* Stat Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        {statCards.map(({ label, value, icon: Icon, color, bg }) => (
-          <div key={label} className="bg-white rounded-2xl p-5 shadow-sm border border-slate-100">
-            <div className={`w-10 h-10 ${bg} rounded-xl flex items-center justify-center mb-3`}>
-              <Icon size={20} className={color} />
-            </div>
-            <p className="text-2xl font-bold text-slate-800">{loading ? '—' : value}</p>
-            <p className="text-slate-500 text-xs mt-1">{label}</p>
-          </div>
+        {statCards.map(({ label, value, icon, tone }) => (
+          <StatCard key={label} label={label} value={value} icon={icon} loading={loading} tone={tone} />
         ))}
       </div>
 
@@ -170,7 +165,7 @@ const StudentDashboard = () => {
         return (
           <div className="mt-8 bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
             {/* Header Banner */}
-            <div style={{ background: 'linear-gradient(135deg, #1e3a5f 0%, #2d5986 100%)' }} className="p-5 flex items-center gap-3">
+            <div className="vs-mess-heading p-5 flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center">
                 <UtensilsCrossed size={20} className="text-white" />
               </div>
@@ -212,7 +207,7 @@ const StudentDashboard = () => {
                         key={row.day}
                         style={
                           isToday
-                            ? { background: 'linear-gradient(90deg, #b0bce3ff 0%, #44a561ff 100%)', borderLeft: '3px solid #4f46e5' }
+                            ? { background: '#f2efff', borderLeft: '3px solid #6846d1' }
                             : { borderLeft: '3px solid transparent' }
                         }
                         className="p-4"
@@ -240,7 +235,7 @@ const StudentDashboard = () => {
                 <div className="hidden sm:block overflow-x-auto">
                   <table className="w-full text-sm min-w-[600px]">
                     <thead>
-                      <tr style={{ background: '#a36e79ff' }}>
+                      <tr className="bg-slate-50">
                         <th className="text-left px-4 py-3 text-slate-600 font-semibold text-xs uppercase tracking-wide w-28">Day</th>
                         {FIELDS.map(f => (
                           <th
@@ -261,7 +256,7 @@ const StudentDashboard = () => {
                             key={row.day}
                             style={
                               isToday
-                                ? { background: 'linear-gradient(90deg, #7186c8ff 0%, #5ba270ff 100%)', borderLeft: '3px solid #656393ff' }
+                                ? { background: '#f2efff', borderLeft: '3px solid #6846d1' }
                                 : { borderLeft: '3px solid transparent' }
                             }
                             className="border-b border-slate-50 transition-colors hover:bg-slate-50/70"

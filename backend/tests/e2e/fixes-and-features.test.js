@@ -77,7 +77,7 @@ test('early exit: a pass cannot be used hours before it starts', async (t) => {
   assert.equal(r.status, 201);
   const later = await api('PUT', `/outpasses/${r.data._id}/approve`, ctx.w1.token);
   assert.equal(later.status, 200, 'a pass starting later today can be approved');
-  r = await api('POST', '/outpasses/scan', ctx.security, { qr_token: later.data.qr_token });
+  r = await api('POST', '/outpasses/scan', ctx.security, { action: 'EXIT', qr_token: later.data.qr_token });
   assert.equal(r.status, 409);
   assert.match(r.data.message, /starts at/);
 });

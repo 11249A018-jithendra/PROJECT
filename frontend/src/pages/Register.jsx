@@ -2,7 +2,9 @@ import { useState, useEffect } from 'react';
 import api from '../api/axios';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Shield, Eye, EyeOff, UserPlus } from 'lucide-react';
+import { Eye, EyeOff, UserPlus } from 'lucide-react';
+
+import AuthShell from '../components/AuthShell';
 
 const Register = () => {
   const { register } = useAuth();
@@ -48,21 +50,10 @@ const Register = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 flex items-center justify-center p-4 py-12">
-      <div className="w-full max-w-lg">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-indigo-600 rounded-2xl mb-4 shadow-lg shadow-indigo-500/30">
-            <Shield size={32} className="text-white" />
-          </div>
-          <h1 className="text-3xl font-bold text-white">Create Account</h1>
-          <p className="text-slate-400 mt-1">Register as a new student</p>
-        </div>
-
-        <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8 shadow-2xl">
-          <form onSubmit={handleSubmit} className="space-y-4">
+    <AuthShell title="Create your account" subtitle="Make yourself at home. Register as a new student." eyebrow="STUDENT REGISTRATION">
+      <form onSubmit={handleSubmit} className="space-y-4">
             {error && (
-              <div role="alert" className="bg-red-500/10 border border-red-500/20 text-red-300 rounded-xl p-3 text-sm">
+              <div role="alert" className="bg-red-500/10 border border-red-500/20 text-red-700 rounded-xl p-3 text-sm">
                 {error}
               </div>
             )}
@@ -70,7 +61,7 @@ const Register = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {fields.map(({ name, label, type, placeholder, required }) => (
                 <div key={name} className={name === 'name' || name === 'email' ? 'sm:col-span-2' : ''}>
-                  <label htmlFor={`register-${name}`} className="block text-sm font-medium text-slate-300 mb-1.5">{label}</label>
+                  <label htmlFor={`register-${name}`} className="block text-sm font-medium text-slate-600 mb-1.5">{label}</label>
                   <input
                     id={`register-${name}`}
                     type={type}
@@ -79,15 +70,15 @@ const Register = () => {
                     value={form[name]}
                     onChange={handleChange}
                     placeholder={placeholder}
-                    className="w-full bg-slate-800 border border-slate-700 text-white rounded-xl px-4 py-2.5 text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+                    className="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-4 py-2.5 text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
                   />
                 </div>
               ))}
 
               {hostels.length > 0 && (
                 <div className="sm:col-span-2">
-                  <label htmlFor="register-hostel" className="block text-sm font-medium text-slate-300 mb-1.5">Hostel</label>
-                  <select id="register-hostel" name="hostel_id" required value={form.hostel_id} onChange={handleChange} className="w-full bg-slate-800 border border-slate-700 text-white rounded-xl px-4 py-2.5 text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
+                  <label htmlFor="register-hostel" className="block text-sm font-medium text-slate-600 mb-1.5">Hostel</label>
+                  <select id="register-hostel" name="hostel_id" required value={form.hostel_id} onChange={handleChange} className="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-4 py-2.5 text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
                     <option value="">Select your hostel</option>
                     {hostels.map((h) => <option key={h._id} value={h._id}>{h.name}</option>)}
                   </select>
@@ -95,7 +86,7 @@ const Register = () => {
               )}
 
               <div className="sm:col-span-2">
-                <label htmlFor="register-home_address" className="block text-sm font-medium text-slate-300 mb-1.5">Home Address</label>
+                <label htmlFor="register-home_address" className="block text-sm font-medium text-slate-600 mb-1.5">Home Address</label>
                 <textarea
                   id="register-home_address"
                   name="home_address"
@@ -105,13 +96,13 @@ const Register = () => {
                   value={form.home_address}
                   onChange={handleChange}
                   placeholder="House no., street, city, state, PIN"
-                  className="w-full bg-slate-800 border border-slate-700 text-white rounded-xl px-4 py-2.5 text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition resize-none"
+                  className="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-4 py-2.5 text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition resize-none"
                 />
               </div>
 
               {/* Password field */}
               <div className="sm:col-span-2">
-                <label htmlFor="register-password" className="block text-sm font-medium text-slate-300 mb-1.5">Password</label>
+                <label htmlFor="register-password" className="block text-sm font-medium text-slate-600 mb-1.5">Password</label>
                 <div className="relative">
                   <input
                     id="register-password"
@@ -121,14 +112,14 @@ const Register = () => {
                     value={form.password}
                     onChange={handleChange}
                     placeholder="Min. 8 characters"
-                    className="w-full bg-slate-800 border border-slate-700 text-white rounded-xl px-4 py-2.5 text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition pr-12"
+                    className="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-4 py-2.5 text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition pr-12"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
                     aria-label={showPassword ? 'Hide password' : 'Show password'}
                     aria-pressed={showPassword}
-                    className="absolute right-1.5 top-1/2 -translate-y-1/2 p-2 rounded-lg text-slate-400 hover:text-white transition"
+                    className="absolute right-1.5 top-1/2 -translate-y-1/2 p-2 rounded-lg text-slate-400 hover:text-indigo-700 transition"
                   >
                     {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                   </button>
@@ -152,16 +143,8 @@ const Register = () => {
               )}
             </button>
           </form>
-
-          <p className="text-center text-slate-400 text-sm mt-6">
-            Already have an account?{' '}
-            <Link to="/login" className="inline-flex items-center min-h-6 text-indigo-400 hover:text-indigo-300 font-medium transition">
-              Sign in
-            </Link>
-          </p>
-        </div>
-      </div>
-    </div>
+      <p className="text-center text-slate-500 text-sm mt-6">Already registered? <Link to="/login" className="text-indigo-700 font-semibold">Sign in</Link></p>
+    </AuthShell>
   );
 };
 

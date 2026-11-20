@@ -3,6 +3,7 @@ import Layout from '../../components/Layout';
 import api from '../../api/axios';
 import BreakdownBar from '../../components/ui/BreakdownBar';
 import DashboardHeader from '../../components/ui/DashboardHeader';
+import StatCard from '../../components/ui/StatCard';
 import useDashboardData from '../../hooks/useDashboardData';
 import { Users, AlertCircle, FileText, UserCog, DoorOpen, Flame, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -26,11 +27,11 @@ const AdminDashboard = () => {
   const { loading } = refresh;
 
   const statCards = [
-    { label: 'Total Students', value: stats?.totalStudents, icon: Users, color: 'text-indigo-600', bg: 'bg-indigo-50', border: 'border-indigo-100', link: '/admin/students' },
-    { label: 'Total Wardens', value: stats?.totalWardens, icon: UserCog, color: 'text-violet-600', bg: 'bg-violet-50', border: 'border-violet-100', link: '/admin/wardens' },
-    { label: 'Currently Outside', value: stats?.currentlyOutside, icon: DoorOpen, color: 'text-orange-600', bg: 'bg-orange-50', border: 'border-orange-100', link: '/security/currently-outside' },
-    { label: 'Pending Complaints', value: stats?.pendingComplaints, icon: AlertCircle, color: 'text-amber-600', bg: 'bg-amber-50', border: 'border-amber-100', link: '/admin/complaints' },
-    { label: 'Pending Outpasses', value: stats?.pendingOutpasses, icon: FileText, color: 'text-blue-600', bg: 'bg-blue-50', border: 'border-blue-100', link: '/admin/outpasses' },
+    { label: 'Total Students', value: stats?.totalStudents, icon: Users, link: '/admin/students', tone: 'lilac' },
+    { label: 'Total Wardens', value: stats?.totalWardens, icon: UserCog, link: '/admin/wardens', tone: 'mint' },
+    { label: 'Currently Outside', value: stats?.currentlyOutside, icon: DoorOpen, link: '/security/currently-outside', tone: 'amber' },
+    { label: 'Pending Complaints', value: stats?.pendingComplaints, icon: AlertCircle, link: '/admin/complaints', tone: 'coral' },
+    { label: 'Pending Outpasses', value: stats?.pendingOutpasses, icon: FileText, link: '/admin/outpasses', tone: 'sky' },
   ];
 
   return (
@@ -58,20 +59,9 @@ const AdminDashboard = () => {
 
       {/* Stat Cards */}
       <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-4 mb-8">
-        {statCards.map(({ label, value, icon: Icon, color, bg, border, link }) => {
-          const card = (
-            <div key={label} className={`bg-white rounded-2xl p-5 shadow-sm border ${border} ${link ? 'cursor-pointer hover:shadow-md transition-shadow' : ''}`}>
-              <div className={`w-11 h-11 ${bg} rounded-xl flex items-center justify-center mb-4`}>
-                <Icon size={22} className={color} />
-              </div>
-              <p className="text-3xl font-bold text-slate-800">
-                {loading ? <span className="animate-pulse text-slate-300">—</span> : (value ?? 0)}
-              </p>
-              <p className="text-slate-500 text-sm mt-1">{label}</p>
-            </div>
-          );
-          return link ? <Link key={label} to={link}>{card}</Link> : card;
-        })}
+        {statCards.map(({ label, value, icon, tone, link }) => (
+          <StatCard key={label} label={label} value={value} icon={icon} loading={loading} tone={tone} to={link} />
+        ))}
       </div>
 
       {/* Today at a glance */}

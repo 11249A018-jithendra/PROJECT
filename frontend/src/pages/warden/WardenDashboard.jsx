@@ -5,6 +5,7 @@ import { useAuth } from '../../context/AuthContext';
 import api from '../../api/axios';
 import BreakdownBar from '../../components/ui/BreakdownBar';
 import DashboardHeader from '../../components/ui/DashboardHeader';
+import StatCard from '../../components/ui/StatCard';
 import useDashboardData from '../../hooks/useDashboardData';
 import { ClipboardList, DoorOpen, AlertTriangle, ArrowRight, Users } from 'lucide-react';
 
@@ -36,10 +37,10 @@ const WardenDashboard = () => {
   const { loading } = refresh;
 
   const cards = [
-    { label: 'Assigned Students', value: stats?.totalStudents, icon: Users, color: 'text-indigo-600', bg: 'bg-indigo-50', border: 'border-indigo-100', link: '/warden/students' },
-    { label: 'Pending Requests', value: stats?.pending, icon: ClipboardList, color: 'text-amber-600', bg: 'bg-amber-50', border: 'border-amber-100', link: '/warden/outpasses' },
-    { label: 'Currently Outside', value: stats?.currentlyOutside, icon: DoorOpen, color: 'text-orange-600', bg: 'bg-orange-50', border: 'border-orange-100', link: '/security/currently-outside' },
-    { label: 'Overdue', value: stats?.overdue, icon: AlertTriangle, color: 'text-red-600', bg: 'bg-red-50', border: 'border-red-100', link: '/security/currently-outside' },
+    { label: 'Assigned Students', value: stats?.totalStudents, icon: Users, link: '/warden/students', tone: 'lilac' },
+    { label: 'Pending Requests', value: stats?.pending, icon: ClipboardList, link: '/warden/outpasses', tone: 'amber' },
+    { label: 'Currently Outside', value: stats?.currentlyOutside, icon: DoorOpen, link: '/security/currently-outside', tone: 'mint' },
+    { label: 'Overdue', value: stats?.overdue, icon: AlertTriangle, link: '/security/currently-outside', tone: 'coral' },
   ];
 
   return (
@@ -47,16 +48,8 @@ const WardenDashboard = () => {
       <DashboardHeader title={`Welcome, ${user?.name?.split(' ')[0]}`} subtitle="Outpass requests and student movement overview" refresh={refresh} />
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        {cards.map(({ label, value, icon: Icon, color, bg, border, link }) => (
-          <Link key={label} to={link} className={`bg-white rounded-2xl p-5 shadow-sm border ${border} hover:shadow-md transition-shadow`}>
-            <div className={`w-11 h-11 ${bg} rounded-xl flex items-center justify-center mb-4`}>
-              <Icon size={22} className={color} />
-            </div>
-            <p className="text-3xl font-bold text-slate-800">
-              {loading ? <span className="animate-pulse text-slate-300">—</span> : (value ?? 0)}
-            </p>
-            <p className="text-slate-500 text-sm mt-1">{label}</p>
-          </Link>
+        {cards.map(({ label, value, icon, tone, link }) => (
+          <StatCard key={label} label={label} value={value} icon={icon} loading={loading} tone={tone} to={link} />
         ))}
       </div>
 
